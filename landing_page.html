@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Robin — AI Waste Sorting</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f0f2f5;
+            color: #1a1d24;
+        }
+
+        /* ── Hero ── */
+        .hero {
+            background: #1a1d24;
+            color: #fff;
+            padding: 52px 24px;
+        }
+        .hero-inner {
+            max-width: 960px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            align-items: center;
+        }
+        .hero-wordmark {
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: #16a34a;
+            margin-bottom: 18px;
+        }
+        .hero h1 {
+            font-size: 40px;
+            font-weight: 800;
+            line-height: 1.15;
+            margin-bottom: 16px;
+        }
+        .hero-sub {
+            font-size: 15px;
+            color: #9ca3af;
+            line-height: 1.7;
+            margin-bottom: 32px;
+        }
+        .hero-stats {
+            display: flex;
+            gap: 32px;
+        }
+        .hero-stat-val {
+            font-size: 26px;
+            font-weight: 800;
+            color: #16a34a;
+            line-height: 1;
+            margin-bottom: 5px;
+        }
+        .hero-stat-label {
+            font-size: 11px;
+            color: #6b7280;
+            line-height: 1.4;
+        }
+        .hero-image img {
+            width: 100%;
+            border-radius: 12px;
+        }
+
+        @media (max-width: 680px) {
+            .hero-inner { grid-template-columns: 1fr; gap: 32px; }
+            .hero-image { order: -1; }
+            .hero h1 { font-size: 28px; }
+            .hero-stats { gap: 20px; }
+        }
+
+        /* ── Page body ── */
+        .page { max-width: 960px; margin: 0 auto; padding: 40px 20px; }
+
+        /* ── Sections ── */
+        .section { margin-bottom: 32px; }
+        .section-title {
+            font-size: 13px; font-weight: 800; text-transform: uppercase;
+            letter-spacing: 0.1em; color: #6b7280; margin-bottom: 8px;
+            padding-bottom: 8px; border-bottom: 2px solid #e5e7eb;
+        }
+        .section-lead {
+            font-size: 13px; font-style: italic; color: #374151;
+            margin-bottom: 16px; line-height: 1.5;
+        }
+
+        /* ── Cards ── */
+        .card {
+            background: #fff; border: 1px solid #e5e7eb;
+            border-radius: 10px; padding: 22px 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+        @media (max-width: 680px) {
+            .grid-2 { grid-template-columns: 1fr; }
+        }
+
+        /* ── Stat boxes ── */
+        .stat-box { text-align: center; padding: 14px 10px; }
+        .stat-val  { font-size: 34px; font-weight: 800; line-height: 1; margin-bottom: 6px; }
+        .stat-label { font-size: 12px; color: #6b7280; line-height: 1.4; }
+
+        .green  { color: #16a34a; }
+        .red    { color: #dc2626; }
+        .orange { color: #d97706; }
+
+        /* ── Callouts ── */
+        .callout {
+            border-left: 4px solid #16a34a; background: #f0fdf4;
+            padding: 14px 18px; border-radius: 0 8px 8px 0;
+            font-size: 13.5px; color: #166534; line-height: 1.6;
+        }
+        .callout.red    { border-color: #dc2626; background: #fef2f2; color: #991b1b; }
+        .callout.orange { border-color: #d97706; background: #fffbeb; color: #92400e; }
+
+        /* ── Sorting animation ── */
+        .anim-card {
+            background: #fff; border: 1px solid #e5e7eb;
+            border-radius: 10px; padding: 22px 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            overflow-x: auto;
+        }
+        .schematic {
+            position: relative;
+            width: 480px; height: 380px;
+            margin: 0 auto;
+        }
+        .top-unit {
+            position: absolute; top: 0; left: 0;
+            width: 480px; height: 70px;
+            background: #1a1d24;
+            border-radius: 10px 10px 0 0;
+        }
+        .red-arrow {
+            position: absolute; left: 52px; top: 3px;
+            font-size: 22px; color: #dc2626;
+            text-shadow: 0 0 10px rgba(220,38,38,0.7);
+            line-height: 1; user-select: none;
+        }
+        .buf-slot {
+            position: absolute; left: 37px; top: 22px;
+            width: 46px; height: 30px;
+            background: #0a0a0a; border-radius: 5px;
+            border: 2px solid #4b5563;
+        }
+        .buf-label {
+            position: absolute; left: 14px; top: 55px;
+            font-size: 8px; font-weight: 700; color: #6b7280;
+            text-transform: uppercase; letter-spacing: 0.07em; white-space: nowrap;
+        }
+        .sensor-dot {
+            position: absolute; left: 96px; top: 30px;
+            width: 10px; height: 10px; border-radius: 50%;
+            background: #6b7280;
+            transition: background 0.15s, box-shadow 0.15s;
+        }
+        .sensor-dot.on { background: #ef4444; box-shadow: 0 0 8px #dc2626; }
+        .scan-ray {
+            position: absolute; left: 110px; top: 34px;
+            height: 2px; width: 0;
+            background: linear-gradient(to right, rgba(22,163,74,0.2), #16a34a);
+            border-radius: 1px; box-shadow: 0 0 5px #16a34a;
+            opacity: 0; transition: width 0.45s ease, opacity 0.2s;
+        }
+        .scan-ray.active { width: 132px; opacity: 1; }
+        .cam-body {
+            position: absolute; left: 249px; top: 27px;
+            width: 22px; height: 16px;
+            background: #374151; border-radius: 3px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .cam-lens {
+            width: 10px; height: 10px; border-radius: 50%;
+            background: #1e40af; border: 1.5px solid #60a5fa;
+            transition: background 0.15s, box-shadow 0.15s;
+        }
+        .cam-lens.scanning { background: #16a34a; box-shadow: 0 0 8px #16a34a; }
+        .cam-label {
+            position: absolute; left: 238px; top: 47px; width: 44px;
+            font-size: 8px; font-weight: 700; color: #6b7280;
+            text-transform: uppercase; letter-spacing: 0.07em; text-align: center;
+        }
+        .class-result {
+            position: absolute; left: 293px; top: 15px;
+            width: 164px; height: 40px;
+            background: #2d3748; border: 1px solid #4b5563; border-radius: 8px;
+            display: flex; align-items: center; justify-content: center; gap: 7px;
+            opacity: 0; transition: opacity 0.25s, background 0.2s, border-color 0.2s;
+        }
+        .class-result.show { opacity: 1; background: #15803d; border-color: #16a34a; }
+        .class-result-emoji { font-size: 16px; }
+        .class-result-text { font-size: 13px; font-weight: 800; color: #fff; letter-spacing: 0.04em; }
+        .rail-area {
+            position: absolute; top: 70px; left: 0;
+            width: 480px; height: 56px;
+            background: #f3f4f6;
+            border-left: 1px solid #e5e7eb; border-right: 1px solid #e5e7eb;
+        }
+        .rail-track {
+            position: absolute; top: 50%; left: 16px; right: 16px;
+            height: 3px; background: #d1d5db; border-radius: 2px;
+            transform: translateY(-50%);
+        }
+        .platform {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            width: 88px; height: 40px;
+            background: #374151; border-radius: 6px;
+            transition: left 0.9s cubic-bezier(0.4,0,0.2,1);
+            overflow: hidden; z-index: 5;
+        }
+        .td-l, .td-r {
+            position: absolute; top: 0; bottom: 0;
+            width: 50%; background: #6b7280; transition: width 0.32s ease;
+        }
+        .td-l { left: 0; }
+        .td-r { right: 0; }
+        .platform.open .td-l,
+        .platform.open .td-r { width: 0; }
+        .falling-item {
+            position: absolute;
+            width: 16px; height: 16px; border-radius: 4px;
+            z-index: 15; opacity: 0;
+        }
+        .anim-bins {
+            position: absolute; top: 126px; left: 0;
+            width: 480px; height: 254px;
+            display: flex;
+            border-radius: 0 0 10px 10px; overflow: hidden;
+            border: 1px solid #e5e7eb; border-top: none;
+        }
+        .anim-bin {
+            flex: 1; display: flex; flex-direction: column;
+            align-items: center; justify-content: flex-end; padding-bottom: 22px;
+            border-right: 1px solid rgba(255,255,255,0.12);
+            transition: filter 0.3s;
+        }
+        .anim-bin:last-child { border-right: none; }
+        .anim-bin.b-general { background: #2d4e6f; }
+        .anim-bin.b-plastic  { background: #dfa53d; }
+        .anim-bin.b-paper    { background: #0c7d73; }
+        .anim-bin.b-metal    { background: #777673; }
+        .anim-bin.lit        { filter: brightness(1.4); }
+        .anim-bin-emoji { font-size: 26px; margin-bottom: 8px; }
+        .anim-bin-name {
+            font-size: 10px; font-weight: 800;
+            text-transform: uppercase; letter-spacing: 0.08em;
+            color: rgba(255,255,255,0.85);
+        }
+        .anim-status {
+            display: flex; align-items: center; gap: 10px;
+            margin-top: 16px; min-height: 32px;
+        }
+        .anim-status-icon {
+            width: 28px; height: 28px; border-radius: 50%;
+            background: #f0fdf4; border: 2px solid #16a34a;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px; flex-shrink: 0;
+        }
+        .anim-status-text { font-size: 13px; color: #374151; font-weight: 500; }
+
+        /* ── Product cards ── */
+        .product-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        @media (max-width: 680px) { .product-grid { grid-template-columns: 1fr; } }
+
+        .product-card {
+            background: #fff; border: 1px solid #e5e7eb;
+            border-radius: 10px; overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .product-img {
+            background: #f9fafb;
+            padding: 28px;
+            display: flex; justify-content: center; align-items: center;
+            min-height: 220px;
+        }
+        .product-img img { max-height: 200px; width: 100%; object-fit: contain; }
+        .product-img.green-tint { background: #f0fdf4; }
+
+        .product-body { padding: 20px 24px; }
+        .product-version {
+            font-size: 10px; font-weight: 800; letter-spacing: 0.14em;
+            text-transform: uppercase; color: #9ca3af; margin-bottom: 6px;
+        }
+        .product-title { font-size: 18px; font-weight: 800; margin-bottom: 8px; }
+        .product-desc  { font-size: 13px; color: #6b7280; line-height: 1.6; margin-bottom: 16px; }
+
+        .product-targets-label {
+            font-size: 10px; font-weight: 800; letter-spacing: 0.1em;
+            text-transform: uppercase; color: #9ca3af; margin-bottom: 8px;
+        }
+        .product-targets-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+        .product-targets-list li {
+            font-size: 12.5px; color: #374151;
+            display: flex; gap: 8px; align-items: flex-start;
+        }
+        .product-targets-list .check { color: #16a34a; flex-shrink: 0; }
+
+        /* ── Traction stats ── */
+        .traction-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        @media (max-width: 680px) { .traction-stats { grid-template-columns: 1fr 1fr; } }
+
+        .traction-stat {
+            background: #fff; border: 1px solid #e5e7eb;
+            border-radius: 10px; padding: 18px 14px; text-align: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .traction-stat-val {
+            font-size: 30px; font-weight: 800; color: #16a34a;
+            line-height: 1; margin-bottom: 6px;
+        }
+        .traction-stat-label { font-size: 11px; color: #6b7280; line-height: 1.4; }
+
+        /* ── Photo grid ── */
+        .photo-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+        }
+        @media (max-width: 900px) { .photo-grid { grid-template-columns: 1fr 1fr; } }
+        @media (max-width: 680px) { .photo-grid { grid-template-columns: 1fr; } }
+
+        .photo-card {
+            background: #fff; border: 1px solid #e5e7eb;
+            border-radius: 10px; overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .photo-card img {
+            width: 100%; height: 200px;
+            object-fit: cover; object-position: center;
+            display: block;
+        }
+        .photo-caption { padding: 12px 14px; }
+        .photo-caption-label {
+            font-size: 10px; font-weight: 800; letter-spacing: 0.1em;
+            text-transform: uppercase; color: #9ca3af; margin-bottom: 4px;
+        }
+        .photo-caption-text { font-size: 12.5px; color: #374151; line-height: 1.5; }
+
+        /* ── Problem layout ── */
+        .problem-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            align-items: start;
+        }
+        @media (max-width: 680px) { .problem-layout { grid-template-columns: 1fr; } }
+
+        /* ── Contact ── */
+        .contact-bar {
+            background: #1a1d24;
+            border-radius: 10px;
+            padding: 32px 28px;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 24px;
+        }
+        @media (max-width: 680px) {
+            .contact-bar { flex-direction: column; align-items: flex-start; }
+        }
+        .contact-bar h3 { font-size: 18px; font-weight: 800; margin-bottom: 6px; }
+        .contact-bar p  { font-size: 13px; color: #9ca3af; line-height: 1.6; }
+        .contact-btn {
+            display: inline-block;
+            background: #16a34a; color: #fff;
+            font-size: 13px; font-weight: 700;
+            padding: 11px 22px; border-radius: 6px;
+            text-decoration: none; white-space: nowrap; flex-shrink: 0;
+        }
+        .contact-btn:hover { background: #15803d; }
+
+        /* ── Footer ── */
+        .footer {
+            margin-top: 28px;
+            font-size: 11px; color: #9ca3af;
+            text-align: center; padding-bottom: 32px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- ── Hero ── -->
+<div class="hero">
+    <div class="hero-inner">
+        <div>
+            <div class="hero-wordmark">Robin</div>
+            <h1>The bin that sorts itself.</h1>
+            <p class="hero-sub">
+                AI-powered waste sorting for Bangkok's buildings. Drop your trash —
+                Robin classifies it and routes it to the correct bin in under 2 seconds.
+                No labels. No guessing. No staff required.
+            </p>
+            <div class="hero-stats">
+                <div>
+                    <div class="hero-stat-val">&lt; 2s</div>
+                    <div class="hero-stat-label">per classification</div>
+                </div>
+                <div>
+                    <div class="hero-stat-val">4</div>
+                    <div class="hero-stat-label">waste categories</div>
+                </div>
+                <div>
+                    <div class="hero-stat-val">~3 mo</div>
+                    <div class="hero-stat-label">break-even</div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <img src="pictures/conceptual_design.png" alt="Robin V6 — AI waste sorting bin">
+        </div>
+    </div>
+</div>
+
+<div class="page">
+
+<!-- ── Problem ── -->
+<div class="section">
+    <div class="section-title">The Problem</div>
+    <p class="section-lead">Bangkok's new BMA waste fee turns sorting into a direct financial decision — but the system that should produce sorting has never worked.</p>
+
+    <div class="problem-layout" style="margin-bottom:16px">
+        <div style="display:flex;flex-direction:column;gap:12px">
+            <div class="callout red">
+                <strong>8,000 THB per m³</strong> — Bangkok's BMA waste fee for large commercial buildings, effective October 2025. Every cubic metre of unsorted waste costs this.
+            </div>
+
+            <div class="card">
+                <div class="grid-2">
+                    <div class="stat-box">
+                        <div class="stat-val red">0%</div>
+                        <div class="stat-label">formal sorting in Bangkok's shared public bins — malls, airports, offices</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-val orange">8%</div>
+                        <div class="stat-label">of Bangkok residents sort at home — the ceiling, not the floor</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="callout orange">
+                The gap isn't awareness. It's <strong>friction at the point of disposal</strong> —
+                a person stands at a bin, guesses which slot is correct, and usually guesses wrong.
+            </div>
+
+            <div class="callout">
+                A medium mall generates ~50 m³/day. At 8,000 THB/m³ that's
+                <strong>400,000 THB/month</strong>. Diverting the ~25% recyclable fraction
+                pays back Robin's cost in <strong>under 4 months</strong>.
+            </div>
+        </div>
+
+        <div class="photo-card">
+            <img src="pictures/ท่าอากาศยานดอนเมือง/3.jpg"
+                 alt="Current manual sorting bins at Don Mueang Airport"
+                 style="height:340px; object-position: center;">
+            <div class="photo-caption">
+                <div class="photo-caption-label">The status quo</div>
+                <div class="photo-caption-text">
+                    Manual sorting bins with poster instructions at Don Mueang Airport's office building —
+                    one of Robin's confirmed pilot sites.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ── How it works ── -->
+<div class="section">
+    <div class="section-title">How Robin Works</div>
+    <p class="section-lead">Drop waste in. Sensor triggers the AI camera. Platform routes it. Under 2 seconds — no user action required.</p>
+
+    <div class="anim-card">
+        <div class="schematic">
+            <div class="top-unit">
+                <div class="red-arrow">⬇</div>
+                <div class="buf-slot"></div>
+                <div class="buf-label">Buffer Box</div>
+                <div class="sensor-dot" id="sensorDot"></div>
+                <div class="scan-ray" id="scanRay"></div>
+                <div class="cam-body"><div class="cam-lens" id="lens"></div></div>
+                <div class="cam-label">AI Cam</div>
+                <div class="class-result" id="classResult">
+                    <span class="class-result-emoji" id="crEmoji"></span>
+                    <span class="class-result-text" id="crText"></span>
+                </div>
+            </div>
+            <div class="rail-area">
+                <div class="rail-track"></div>
+                <div class="platform" id="platform">
+                    <div class="td-l"></div>
+                    <div class="td-r"></div>
+                </div>
+            </div>
+            <div class="falling-item" id="fallingItem"></div>
+            <div class="anim-bins">
+                <div class="anim-bin b-general" id="abin0"><div class="anim-bin-emoji">🗑️</div><div class="anim-bin-name">General</div></div>
+                <div class="anim-bin b-plastic"  id="abin1"><div class="anim-bin-emoji">🍾</div><div class="anim-bin-name">Plastic</div></div>
+                <div class="anim-bin b-paper"    id="abin2"><div class="anim-bin-emoji">📄</div><div class="anim-bin-name">Paper</div></div>
+                <div class="anim-bin b-metal"    id="abin3"><div class="anim-bin-emoji">🥫</div><div class="anim-bin-name">Metal</div></div>
+            </div>
+        </div>
+        <div class="anim-status">
+            <div class="anim-status-icon" id="animIcon">—</div>
+            <div class="anim-status-text" id="animText">Starting…</div>
+        </div>
+    </div>
+</div>
+
+<!-- ── Products ── -->
+<div class="section">
+    <div class="section-title">Product Lineup</div>
+    <p class="section-lead">Two versions for two distinct needs — both built on the same AI core.</p>
+
+    <div class="product-grid">
+        <!-- V6 -->
+        <div class="product-card">
+            <div class="product-img">
+                <img src="pictures/conceptual_design_no_bg.png" alt="Robin V6">
+            </div>
+            <div class="product-body">
+                <div class="product-version">V6 — Autonomous</div>
+                <div class="product-title">Drop &amp; walk away.</div>
+                <div class="product-desc">
+                    Fully automatic. The user disposes normally and Robin handles the rest.
+                    Built for high-footfall environments where convenience is non-negotiable.
+                </div>
+                <div class="product-targets-label">Target venues</div>
+                <ul class="product-targets-list">
+                    <li><span class="check">✓</span><span>Shopping malls</span></li>
+                    <li><span class="check">✓</span><span>Airports &amp; office buildings</span></li>
+                    <li><span class="check">✓</span><span>Hotels &amp; large commercial spaces</span></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- V7 -->
+        <div class="product-card">
+            <div class="product-img green-tint">
+                <img src="pictures/v7_conceptual_design.png" alt="Robin V7">
+            </div>
+            <div class="product-body">
+                <div class="product-version">V7 — Guided Disposal</div>
+                <div class="product-title">Show it. Sort it.</div>
+                <div class="product-desc">
+                    Users present waste to a camera. The correct bin's lid opens automatically.
+                    Enforces piece-by-piece disposal and rejects contaminated items —
+                    building real awareness, not just automating the problem away.
+                </div>
+                <div class="product-targets-label">Target venues</div>
+                <ul class="product-targets-list">
+                    <li><span class="check">✓</span><span>Universities &amp; schools</span></li>
+                    <li><span class="check">✓</span><span>BMA-operated public spaces</span></li>
+                    <li><span class="check">✓</span><span>Environmentally-focused organizations</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ── Traction ── -->
+<div class="section">
+    <div class="section-title">Traction</div>
+    <p class="section-lead">From a solo senior project to a deployed product with confirmed pilots and a team of six.</p>
+
+    <div class="traction-stats">
+        <div class="traction-stat">
+            <div class="traction-stat-val">37+</div>
+            <div class="traction-stat-label">days continuously deployed at GWSQ</div>
+        </div>
+        <div class="traction-stat">
+            <div class="traction-stat-val">300+</div>
+            <div class="traction-stat-label">real-world items sorted &amp; labeled</div>
+        </div>
+        <div class="traction-stat">
+            <div class="traction-stat-val">6</div>
+            <div class="traction-stat-label">organizations interviewed across Bangkok</div>
+        </div>
+        <div class="traction-stat">
+            <div class="traction-stat-val">2</div>
+            <div class="traction-stat-label">pilot deployments confirmed</div>
+        </div>
+    </div>
+
+    <div class="photo-grid">
+        <div class="photo-card">
+            <img src="pictures/prototype_at_GWSQ.jpg"
+                 alt="V5 prototype running at GWSQ"
+                 style="object-position: top center;">
+            <div class="photo-caption">
+                <div class="photo-caption-label">Live deployment — GWSQ</div>
+                <div class="photo-caption-text">
+                    V5 prototype, running since May 2026. Actively collecting real-world data
+                    to train the next-generation model.
+                </div>
+            </div>
+        </div>
+        <div class="photo-card">
+            <img src="pictures/ท่าอากาศยานดอนเมือง/1.jpg"
+                 alt="Meeting with Don Mueang Airport management">
+            <div class="photo-caption">
+                <div class="photo-caption-label">Pilot confirmed — Don Mueang Airport</div>
+                <div class="photo-caption-text">
+                    Formal meeting with airport management. Pilot deployment at their
+                    office building agreed.
+                </div>
+            </div>
+        </div>
+        <div class="photo-card">
+            <img src="pictures/สนามกีฬาแห่งชาติ%20ศุภชลาศัย/1.jpg"
+                 alt="On-site visit at National Stadium">
+            <div class="photo-caption">
+                <div class="photo-caption-label">Pilot confirmed — National Stadium</div>
+                <div class="photo-caption-text">
+                    On-site visit with facility management. Pilot for testing and
+                    data collection approved.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ── Contact ── -->
+<div class="contact-bar">
+    <div>
+        <h3>Interested in a pilot?</h3>
+        <p>We're actively partnering with venues in Bangkok.<br>Reach out and let's talk.</p>
+    </div>
+    <a class="contact-btn" href="mailto:siravit666@gmail.com">siravit666@gmail.com</a>
+</div>
+
+<div class="footer">
+    Robin &nbsp;·&nbsp; Bangkok, Thailand &nbsp;·&nbsp; 2026
+</div>
+
+</div><!-- end .page -->
+<script>
+(function() {
+    const ITEMS = [
+        { label: 'Plastic',  emoji: '🍾', color: '#f59e0b', bin: 1 },
+        { label: 'Paper',    emoji: '📄', color: '#14b8a6', bin: 2 },
+        { label: 'Metal',    emoji: '🥫', color: '#9ca3af', bin: 3 },
+        { label: 'General',  emoji: '🗑️', color: '#3b82f6', bin: 0 },
+    ];
+    const BIN_POS  = [16, 136, 256, 376];
+    const HOME_X   = BIN_POS[0];
+    const INLET_CX = HOME_X + 44;
+    const ITEM_W   = 16;
+    const Y_INLET    = 29;
+    const Y_PLATFORM = 90;
+    const Y_BIN      = 245;
+
+    const platform    = document.getElementById('platform');
+    const itemEl      = document.getElementById('fallingItem');
+    const lens        = document.getElementById('lens');
+    const sensorDot   = document.getElementById('sensorDot');
+    const scanRay     = document.getElementById('scanRay');
+    const classResult = document.getElementById('classResult');
+    const crEmoji     = document.getElementById('crEmoji');
+    const crText      = document.getElementById('crText');
+    const animIcon    = document.getElementById('animIcon');
+    const animText    = document.getElementById('animText');
+
+    const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+    function setStatus(icon, text) { animIcon.textContent = icon; animText.textContent = text; }
+    function movePlatform(x, dur) {
+        platform.style.transition = `left ${dur||'0.9s'} cubic-bezier(0.4,0,0.2,1)`;
+        platform.style.left = x + 'px';
+    }
+    function moveItem(cx, y, tr) {
+        itemEl.style.transition = tr || 'none';
+        itemEl.style.left = (cx - ITEM_W / 2) + 'px';
+        itemEl.style.top  = y + 'px';
+    }
+
+    let seq = 0;
+    async function runCycle() {
+        const it = ITEMS[seq % ITEMS.length]; seq++;
+
+        platform.style.transition = 'none'; platform.style.left = HOME_X + 'px';
+        platform.classList.remove('open');
+        itemEl.style.transition = 'none'; itemEl.style.opacity = '0';
+        itemEl.style.background = it.color;
+        itemEl.style.borderRadius = it.label === 'General' ? '50%' : '4px';
+        moveItem(INLET_CX, Y_INLET);
+        classResult.classList.remove('show'); scanRay.classList.remove('active');
+        lens.classList.remove('scanning'); sensorDot.classList.remove('on');
+        document.querySelectorAll('.anim-bin').forEach(b => b.classList.remove('lit'));
+        setStatus('—', 'Idle — waiting for item');
+        await sleep(600);
+
+        setStatus('📥', 'Item placed in buffer box');
+        itemEl.style.transition = 'opacity 0.2s'; itemEl.style.opacity = '1';
+        sensorDot.classList.add('on');
+        await sleep(700);
+
+        sensorDot.classList.remove('on');
+        setStatus('🔍', 'Sensor triggered — AI camera scanning…');
+        lens.classList.add('scanning'); scanRay.classList.add('active');
+        await sleep(500);
+
+        crEmoji.textContent = it.emoji; crText.textContent = it.label;
+        classResult.classList.add('show');
+        setStatus('✓', 'Classified: ' + it.label);
+        await sleep(300);
+        scanRay.classList.remove('active'); lens.classList.remove('scanning');
+        await sleep(500);
+
+        classResult.classList.remove('show');
+        setStatus('↓', 'Item loading onto platform…');
+        moveItem(INLET_CX, Y_PLATFORM, 'top 0.28s ease');
+        await sleep(380);
+
+        const targetX = BIN_POS[it.bin];
+        const platCX  = targetX + 44;
+        const isHome  = targetX === HOME_X;
+
+        if (isHome) {
+            setStatus('✓', 'General — already at home position');
+            await sleep(350);
+        } else {
+            setStatus('↔', 'Routing to ' + it.label + ' channel…');
+            moveItem(platCX, Y_PLATFORM, 'left 0.9s cubic-bezier(0.4,0,0.2,1)');
+            movePlatform(targetX); await sleep(1000);
+        }
+
+        setStatus('⬇', 'Trapdoor open — item dropped!');
+        platform.classList.add('open');
+        await sleep(270);
+
+        moveItem(platCX, Y_BIN, 'top 0.4s ease-in, opacity 0.12s ease 0.34s');
+        itemEl.style.opacity = '1';
+        await sleep(290);
+        document.getElementById('abin' + it.bin).classList.add('lit');
+        await sleep(220); itemEl.style.opacity = '0';
+        await sleep(550);
+
+        platform.classList.remove('open');
+        if (isHome) {
+            setStatus('✓', 'Ready for next item'); await sleep(400);
+        } else {
+            setStatus('↩', 'Returning to home (General)…');
+            movePlatform(HOME_X, '0.85s'); await sleep(950);
+        }
+        document.getElementById('abin' + it.bin).classList.remove('lit');
+        setStatus('✓', 'Ready for next item');
+        await sleep(700);
+        runCycle();
+    }
+    setTimeout(runCycle, 500);
+})();
+</script>
+</body>
+</html>
