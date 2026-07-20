@@ -488,6 +488,56 @@
             </div>
         </div>
     </div>
+
+    <!-- Waste hierarchy diagram -->
+    <div style="text-align:center; margin-top:28px;">
+        <p style="font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.1em; color:#6b7280; margin-bottom:14px;">Waste Management Hierarchy</p>
+        <svg viewBox="0 0 540 610" xmlns="http://www.w3.org/2000/svg"
+             style="width:100%; max-width:460px; display:inline-block;">
+
+            <!-- Bands -->
+            <polygon points="0,0 540,0 495,100 45,100" fill="#43a84a"/>
+            <polygon points="45,102 495,102 450,201 90,201" fill="#3b8db5"/>
+            <polygon points="90,203 450,203 405,302 135,302" fill="#e8821a"/>
+            <polygon points="135,304 405,304 360,403 180,403" fill="#2d3a4e"/>
+            <polygon points="180,405 360,405 315,504 225,504" fill="#c0392b"/>
+            <polygon points="225,506 315,506 270,600" fill="#546e7a"/>
+
+            <!-- PREVENT: prohibition icon + label -->
+            <circle cx="192" cy="50" r="22" fill="none" stroke="white" stroke-width="5"/>
+            <line x1="176" y1="34" x2="208" y2="66" stroke="white" stroke-width="5" stroke-linecap="round"/>
+            <text x="224" y="50" fill="white" font-family="'Segoe UI',Arial,sans-serif" font-weight="bold" font-size="32" dominant-baseline="middle">Prevent</text>
+
+            <!-- REDUCE: down-arrow icon + label -->
+            <line x1="209" y1="131" x2="209" y2="160" stroke="white" stroke-width="5" stroke-linecap="round"/>
+            <polyline points="197,150 209,164 221,150" fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+            <text x="234" y="151" fill="white" font-family="'Segoe UI',Arial,sans-serif" font-weight="bold" font-size="29" dominant-baseline="middle">Reduce</text>
+
+            <!-- REUSE: circular arrow + label -->
+            <text x="222" y="252" fill="white" font-family="'Segoe UI',Arial,sans-serif" font-size="34" dominant-baseline="middle" text-anchor="middle">↺</text>
+            <text x="250" y="252" fill="white" font-family="'Segoe UI',Arial,sans-serif" font-weight="bold" font-size="27" dominant-baseline="middle">Reuse</text>
+
+            <!-- RECYCLE: ♻ symbol + label -->
+            <text x="204" y="353" fill="white" font-family="'Segoe UI',Arial,sans-serif" font-size="28" dominant-baseline="middle">♻</text>
+            <text x="238" y="353" fill="white" font-family="'Segoe UI',Arial,sans-serif" font-weight="bold" font-size="24" dominant-baseline="middle">Recycle</text>
+
+            <!-- RECOVER: refresh icon + label -->
+            <text x="232" y="454" fill="white" font-family="'Segoe UI',Arial,sans-serif" font-size="24" dominant-baseline="middle" text-anchor="middle">↻</text>
+            <text x="252" y="454" fill="white" font-family="'Segoe UI',Arial,sans-serif" font-weight="bold" font-size="18" dominant-baseline="middle">Recover</text>
+
+            <!-- DISPOSE: trash icon + label -->
+            <g transform="translate(270,526)" stroke="white" fill="none">
+                <rect x="-10" y="-10" width="20" height="17" rx="2" stroke-width="2.5"/>
+                <line x1="-13" y1="-10" x2="13" y2="-10" stroke-width="2.5" stroke-linecap="round"/>
+                <line x1="-5" y1="-14" x2="5" y2="-14" stroke-width="2.5" stroke-linecap="round"/>
+                <line x1="-4" y1="-4" x2="-4" y2="3" stroke-width="1.5" stroke-linecap="round"/>
+                <line x1="0" y1="-4" x2="0" y2="3" stroke-width="1.5" stroke-linecap="round"/>
+                <line x1="4" y1="-4" x2="4" y2="3" stroke-width="1.5" stroke-linecap="round"/>
+            </g>
+            <text x="270" y="553" fill="white" font-family="'Segoe UI',Arial,sans-serif" font-weight="bold" font-size="10" text-anchor="middle" dominant-baseline="middle">Dispose</text>
+
+        </svg>
+    </div>
 </div>
 
 <!-- ── How it works ── -->
