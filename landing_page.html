@@ -28,18 +28,19 @@
             align-items: center;
         }
         .hero-wordmark {
-            font-size: 12px;
-            font-weight: 800;
-            letter-spacing: 0.18em;
-            text-transform: uppercase;
-            color: #16a34a;
             margin-bottom: 18px;
         }
+        .hero-wordmark img {
+            height: 32px;
+            width: auto;
+            opacity: 0.92;
+        }
         .hero h1 {
-            font-size: 40px;
+            font-size: 34px;
             font-weight: 800;
             line-height: 1.15;
             margin-bottom: 16px;
+            white-space: nowrap;
         }
         .hero-sub {
             font-size: 15px;
@@ -75,7 +76,7 @@
         @media (max-width: 680px) {
             .hero-inner { grid-template-columns: 1fr; gap: 32px; }
             .hero-image { order: -1; }
-            .hero h1 { font-size: 28px; }
+            .hero h1 { font-size: 26px; white-space: normal; }
             .hero-stats { gap: 20px; }
         }
 
@@ -406,8 +407,7 @@
     <div class="hero-inner">
         <div>
             <div class="hero-wordmark">
-                <img src="pictures/Logo.png" alt="Robin" style="height:28px; vertical-align:middle; margin-right:8px;">
-                Robin
+                <img src="pictures/Logo.png" alt="Robin">
             </div>
             <h1>Make Every Throw Count.</h1>
             <p class="hero-sub">
