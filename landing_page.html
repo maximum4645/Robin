@@ -44,7 +44,7 @@
         }
         .hero-sub {
             font-size: 15px;
-            color: #9ca3af;
+            color: #e2e8f0;
             line-height: 1.7;
             margin-bottom: 32px;
         }
@@ -64,7 +64,7 @@
         }
         .hero-stat-label {
             font-size: 13px;
-            color: #6b7280;
+            color: #cbd5e1;
             line-height: 1.4;
         }
         .hero-image {
@@ -492,55 +492,51 @@
     <!-- Waste hierarchy diagram -->
     <div style="text-align:center; margin-top:28px;">
         <p style="font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.1em; color:#6b7280; margin-bottom:14px;">Waste Management Hierarchy</p>
-        <svg viewBox="0 0 540 648" xmlns="http://www.w3.org/2000/svg"
+        <svg viewBox="0 0 540 615" xmlns="http://www.w3.org/2000/svg"
              style="width:100%; max-width:460px; display:inline-block;">
 
             <!-- Bands: gentle slope (1/3), each 100px tall, 2px gap -->
-            <!-- At y: left=y/3, right=540-y/3 -->
             <polygon points="0,0 540,0 507,100 33,100"       fill="#43a84a"/>
             <polygon points="34,102 506,102 473,201 67,201"   fill="#3b8db5"/>
             <polygon points="68,203 472,203 439,302 101,302"  fill="#e8821a"/>
             <polygon points="102,304 438,304 405,403 135,403" fill="#2d3a4e"/>
             <polygon points="136,405 404,405 371,504 169,504" fill="#c0392b"/>
             <polygon points="170,506 370,506 338,605 202,605" fill="#546e7a"/>
-            <!-- Pointed tip below last band -->
-            <polygon points="202,606 338,606 270,648"         fill="#546e7a"/>
 
-            <!-- All labels: same font-size 20, icon + text centered per band -->
-            <!-- Icons at x=232, labels left-aligned at x=254 -->
+            <!-- All labels: font-size 24, icon center x=220, text left at x=240 -->
 
             <!-- PREVENT (center y=50) -->
-            <circle cx="232" cy="50" r="13" fill="none" stroke="white" stroke-width="3.5"/>
-            <line x1="223" y1="41" x2="241" y2="59" stroke="white" stroke-width="3.5" stroke-linecap="round"/>
-            <text x="254" y="50" fill="white" font-family="'Segoe UI',Arial,sans-serif" font-weight="bold" font-size="20" dominant-baseline="middle">Prevent</text>
+            <circle cx="220" cy="50" r="15" fill="none" stroke="white" stroke-width="4"/>
+            <line x1="210" y1="40" x2="230" y2="60" stroke="white" stroke-width="4" stroke-linecap="round"/>
+            <text x="242" y="50" fill="white" font-family="'Segoe UI',Arial,sans-serif" font-weight="bold" font-size="24" dominant-baseline="middle">Prevent</text>
 
             <!-- REDUCE (center y=152) -->
-            <line x1="232" y1="136" x2="232" y2="162" stroke="white" stroke-width="3.5" stroke-linecap="round"/>
-            <polyline points="222,154 232,166 242,154" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
-            <text x="254" y="152" fill="white" font-family="'Segoe UI',Arial,sans-serif" font-weight="bold" font-size="20" dominant-baseline="middle">Reduce</text>
+            <line x1="220" y1="133" x2="220" y2="163" stroke="white" stroke-width="4" stroke-linecap="round"/>
+            <polyline points="208,154 220,168 232,154" fill="none" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+            <text x="242" y="152" fill="white" font-family="'Segoe UI',Arial,sans-serif" font-weight="bold" font-size="24" dominant-baseline="middle">Reduce</text>
 
             <!-- REUSE (center y=253) -->
-            <text x="232" y="253" fill="white" font-family="'Segoe UI',Arial,sans-serif" font-size="24" dominant-baseline="middle" text-anchor="middle">↺</text>
-            <text x="254" y="253" fill="white" font-family="'Segoe UI',Arial,sans-serif" font-weight="bold" font-size="20" dominant-baseline="middle">Reuse</text>
+            <text x="220" y="253" fill="white" font-family="'Segoe UI',Arial,sans-serif" font-size="28" dominant-baseline="middle" text-anchor="middle">↺</text>
+            <text x="242" y="253" fill="white" font-family="'Segoe UI',Arial,sans-serif" font-weight="bold" font-size="24" dominant-baseline="middle">Reuse</text>
 
             <!-- RECYCLE (center y=354) -->
-            <text x="232" y="354" fill="white" font-family="'Segoe UI',Arial,sans-serif" font-size="22" dominant-baseline="middle" text-anchor="middle">♻</text>
-            <text x="254" y="354" fill="white" font-family="'Segoe UI',Arial,sans-serif" font-weight="bold" font-size="20" dominant-baseline="middle">Recycle</text>
+            <text x="220" y="354" fill="white" font-family="'Segoe UI',Arial,sans-serif" font-size="26" dominant-baseline="middle" text-anchor="middle">♻</text>
+            <text x="242" y="354" fill="white" font-family="'Segoe UI',Arial,sans-serif" font-weight="bold" font-size="24" dominant-baseline="middle">Recycle</text>
 
             <!-- RECOVER (center y=455) -->
-            <text x="232" y="455" fill="white" font-family="'Segoe UI',Arial,sans-serif" font-size="22" dominant-baseline="middle" text-anchor="middle">↻</text>
-            <text x="254" y="455" fill="white" font-family="'Segoe UI',Arial,sans-serif" font-weight="bold" font-size="20" dominant-baseline="middle">Recover</text>
+            <text x="220" y="455" fill="white" font-family="'Segoe UI',Arial,sans-serif" font-size="26" dominant-baseline="middle" text-anchor="middle">↻</text>
+            <text x="242" y="455" fill="white" font-family="'Segoe UI',Arial,sans-serif" font-weight="bold" font-size="24" dominant-baseline="middle">Recover</text>
 
             <!-- DISPOSE (center y=556) -->
-            <g transform="translate(232,556)" stroke="white" fill="none">
-                <rect x="-9" y="-9" width="18" height="16" rx="2" stroke-width="3"/>
-                <line x1="-12" y1="-9" x2="12" y2="-9" stroke-width="3" stroke-linecap="round"/>
-                <line x1="-5" y1="-13" x2="5" y2="-13" stroke-width="3" stroke-linecap="round"/>
-                <line x1="-3" y1="-3" x2="-3" y2="4" stroke-width="1.5" stroke-linecap="round"/>
-                <line x1="0" y1="-3" x2="0" y2="4" stroke-width="1.5" stroke-linecap="round"/>
-                <line x1="3" y1="-3" x2="3" y2="4" stroke-width="1.5" stroke-linecap="round"/>
+            <g transform="translate(220,556)" stroke="white" fill="none">
+                <rect x="-10" y="-10" width="20" height="18" rx="2" stroke-width="4"/>
+                <line x1="-13" y1="-10" x2="13" y2="-10" stroke-width="4" stroke-linecap="round"/>
+                <line x1="-5" y1="-14" x2="5" y2="-14" stroke-width="4" stroke-linecap="round"/>
+                <line x1="-4" y1="-3" x2="-4" y2="5" stroke-width="2" stroke-linecap="round"/>
+                <line x1="0" y1="-3" x2="0" y2="5" stroke-width="2" stroke-linecap="round"/>
+                <line x1="4" y1="-3" x2="4" y2="5" stroke-width="2" stroke-linecap="round"/>
             </g>
-            <text x="254" y="556" fill="white" font-family="'Segoe UI',Arial,sans-serif" font-weight="bold" font-size="20" dominant-baseline="middle">Dispose</text>
+            <text x="242" y="556" fill="white" font-family="'Segoe UI',Arial,sans-serif" font-weight="bold" font-size="24" dominant-baseline="middle">Dispose</text>
 
         </svg>
     </div>
