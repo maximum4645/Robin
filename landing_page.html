@@ -361,14 +361,34 @@
         }
         .photo-caption-text { font-size: 12.5px; color: #374151; line-height: 1.5; }
 
-        /* ── Problem layout ── */
-        .problem-layout {
+        /* ── Problem 3-card grid ── */
+        .problem-3-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr 1fr 1fr;
             gap: 16px;
+            margin-bottom: 20px;
             align-items: start;
         }
-        @media (max-width: 680px) { .problem-layout { grid-template-columns: 1fr; } }
+        @media (max-width: 780px) { .problem-3-grid { grid-template-columns: 1fr; } }
+
+        .p3-tag {
+            font-size: 10px; font-weight: 800; text-transform: uppercase;
+            letter-spacing: 0.1em; color: #6b7280; margin-bottom: 10px;
+        }
+        .p3-stat {
+            font-size: 36px; font-weight: 800; color: #16a34a;
+            line-height: 1; margin-bottom: 3px;
+        }
+        .p3-stat-sub {
+            font-size: 11px; color: #6b7280; line-height: 1.4; margin-bottom: 14px;
+        }
+        .p3-body {
+            font-size: 13px; color: #374151; line-height: 1.65; margin-bottom: 14px;
+        }
+        .p3-source {
+            font-size: 10.5px; color: #9ca3af; font-style: italic;
+        }
+        .p3-source a { color: #9ca3af; text-decoration: underline; }
 
         /* ── Contact ── */
         .contact-bar {
@@ -442,51 +462,43 @@
 <!-- ── Problem ── -->
 <div class="section">
     <div class="section-title">The Problem</div>
-    <p class="section-lead">Bangkok's new BMA waste fee turns sorting into a direct financial decision — but the system that should produce sorting has never worked.</p>
+    <p class="section-lead">Thailand's waste system is under strain on three fronts — and the cost of inaction is already landing on businesses.</p>
 
-    <div class="problem-layout" style="margin-bottom:16px">
-        <div style="display:flex;flex-direction:column;gap:12px">
-            <div class="callout red">
-                <strong>8,000 THB per m³</strong> — Bangkok's BMA waste fee for large commercial buildings, effective October 2025. Every cubic metre of unsorted waste costs this.
-            </div>
+    <div class="problem-3-grid">
 
-            <div class="card">
-                <div class="grid-2">
-                    <div class="stat-box">
-                        <div class="stat-val red">0%</div>
-                        <div class="stat-label">formal sorting in Bangkok's shared public bins — malls, airports, offices</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-val orange">8%</div>
-                        <div class="stat-label">of Bangkok residents sort at home — the ceiling, not the floor</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="callout orange">
-                The gap isn't awareness. It's <strong>friction at the point of disposal</strong> —
-                a person stands at a bin, guesses which slot is correct, and usually guesses wrong.
-            </div>
-
-            <div class="callout">
-                A medium mall generates ~50 m³/day. At 8,000 THB/m³ that's
-                <strong>400,000 THB/month</strong>. Diverting the ~25% recyclable fraction
-                pays back Robin's cost in <strong>under 4 months</strong>.
-            </div>
+        <!-- 01 Fiscal burden -->
+        <div class="card">
+            <div class="p3-tag">01 — Fiscal Burden</div>
+            <div class="p3-stat">฿20B</div>
+            <div class="p3-stat-sub">taxpayer baht spent on waste per year</div>
+            <p class="p3-body">The Thai government spends <strong>20 billion THB annually</strong> collecting,
+            transporting, and disposing of waste — yet only 6% of the country's 2,057 disposal sites
+            meet environmental standards. The bill keeps growing with no recyclables diverted.</p>
+            <div class="p3-source">Source: <a href="https://thailandcenetwork.org/" target="_blank">Thailand CE Network</a></div>
         </div>
 
-        <div class="photo-card">
-            <img src="pictures/ท่าอากาศยานดอนเมือง/3.jpg"
-                 alt="Current manual sorting bins at Don Mueang Airport"
-                 style="height:340px; object-position: center;">
-            <div class="photo-caption">
-                <div class="photo-caption-label">The status quo</div>
-                <div class="photo-caption-text">
-                    Manual sorting bins with poster instructions at Don Mueang Airport's office building —
-                    one of Robin's confirmed pilot sites.
-                </div>
-            </div>
+        <!-- 02 Business pressure -->
+        <div class="card">
+            <div class="p3-tag">02 — Business Pressure</div>
+            <div class="p3-stat">8,000</div>
+            <div class="p3-stat-sub">THB/m³ fee for unsorted commercial waste (BMA)</div>
+            <p class="p3-body">BMA raised the commercial waste fee <strong>4× effective October 2025</strong>.
+            A medium mall generating ~50 m³/day now faces <strong>400,000 THB/month</strong> in fees for
+            unsorted waste. Diverting the recyclable fraction pays back Robin's cost in under 4 months.</p>
+            <div class="p3-source">Sources: Bangkok Post, Nation Thailand</div>
         </div>
+
+        <!-- 03 Environmental harm -->
+        <div class="card">
+            <div class="p3-tag">03 — Environmental Harm</div>
+            <div class="p3-stat">27M</div>
+            <div class="p3-stat-sub">tons of waste generated in Thailand per year</div>
+            <p class="p3-body">Most ends up in landfills and open dumps — burned illegally, releasing
+            sulfur dioxide, methane, and microplastics that contaminate soil, water, and air.
+            Thailand ranks <strong>top 10 globally</strong> for ocean plastic pollution.</p>
+            <div class="p3-source">Sources: <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC4134614/" target="_blank">PMC Landfill Fire Study</a>, <a href="https://thailandcenetwork.org/" target="_blank">Thailand CE Network</a></div>
+        </div>
+
     </div>
 
     <!-- Waste hierarchy diagram -->
